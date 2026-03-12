@@ -27,7 +27,6 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
   const [showLogout, setShowLogout] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") !== "light");
   const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
-  const [availableQuizTopics, setAvailableQuizTopics] = useState<string[]>([]);
   const featureEnabled = isProfileBoosterQuizEnabled();
 
   useEffect(() => {
