@@ -7,7 +7,7 @@ import { getCurrentUserProfile, firebaseSignOut } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { isProfileBoosterQuizEnabled } from "@/lib/featureFlags";
-import { getAllQuizResults, getAvailableQuizTopics, type QuizResult } from "@/lib/boosterQuiz";
+import { getAllQuizResults, type QuizResult } from "@/lib/boosterQuiz";
 import { useAppStore } from "@/store/useAppStore";
 
 interface ProfileScreenProps {
@@ -27,7 +27,6 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
   const [showLogout, setShowLogout] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") !== "light");
   const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
-  const [availableQuizTopics, setAvailableQuizTopics] = useState<string[]>([]);
   const featureEnabled = isProfileBoosterQuizEnabled();
 
   useEffect(() => {
@@ -48,9 +47,8 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
     };
     loadPhone();
 
-    if (featureEnabled) {
+    if (featureEnabled && user) {
       getAllQuizResults(user.uid).then(setQuizResults);
-      getAvailableQuizTopics().then(setAvailableQuizTopics);
     }
   }, [user?.uid, featureEnabled]);
 
@@ -91,6 +89,19 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
     }
     return null;
   };
+
+  // Get all completed topics from syllabus (all subtopics done)
+  const completedTopicIds: { topicId: string; name: string; nameHi: string }[] = [];
+  for (const subject of syllabus) {
+    for (const topic of subject.topics) {
+      const done = topic.subtopics?.length
+        ? topic.subtopics.every((st) => st.completed)
+        : topic.completed;
+      if (done) {
+        completedTopicIds.push({ topicId: topic.id, name: topic.name, nameHi: topic.nameHi });
+      }
+    }
+  }
 
   // Get latest result per topic
   const latestResultsByTopic = new Map<string, QuizResult>();
@@ -195,7 +206,7 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
       </motion.div>
 
       {/* Booster Quiz Section */}
-      {featureEnabled && availableQuizTopics.length > 0 && (
+      {featureEnabled && completedTopicIds.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <div className="flex items-center gap-1.5 mb-3">
             <Sparkles size={14} className="text-primary" />
@@ -204,21 +215,16 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
             </h2>
           </div>
           <div className="rounded-2xl bg-card border border-border overflow-hidden divide-y divide-border">
-            {availableQuizTopics.map((topicId) => {
-              const topicInfo = getTopicInfo(topicId);
+            {completedTopicIds.map(({ topicId, name, nameHi }) => {
               const result = latestResultsByTopic.get(topicId);
-              const topicDisplayName = topicInfo
-                ? (language === "hi" ? topicInfo.nameHi : topicInfo.name)
-                : topicId;
+              const topicDisplayName = language === "hi" ? nameHi : name;
 
               return (
                 <button
                   key={topicId}
                   className="w-full flex items-center gap-3 p-3.5 sm:p-4 active:bg-secondary/50 transition-colors text-left"
                   onClick={() => {
-                    if (onStartQuiz && topicInfo) {
-                      onStartQuiz(topicId, topicInfo.name, topicInfo.nameHi);
-                    }
+                    onStartQuiz?.(topicId, name, nameHi);
                   }}
                 >
                   <div className="flex-1 min-w-0">
