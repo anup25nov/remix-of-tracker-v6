@@ -72,36 +72,6 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
     }
   };
 
-  // Build quiz topic info from syllabus
-  const getTopicInfo = (topicId: string) => {
-    for (const subject of syllabus) {
-      const topic = subject.topics.find((t) => t.id === topicId);
-      if (topic) return { name: topic.name, nameHi: topic.nameHi };
-    }
-    return null;
-  };
-
-  // Get all completed topics from syllabus (all subtopics done)
-  const completedTopicIds: { topicId: string; name: string; nameHi: string }[] = [];
-  for (const subject of syllabus) {
-    for (const topic of subject.topics) {
-      const done = topic.subtopics?.length
-        ? topic.subtopics.every((st) => st.completed)
-        : topic.completed;
-      if (done) {
-        completedTopicIds.push({ topicId: topic.id, name: topic.name, nameHi: topic.nameHi });
-      }
-    }
-  }
-
-  // Get latest result per topic
-  const latestResultsByTopic = new Map<string, QuizResult>();
-  for (const r of quizResults) {
-    if (!latestResultsByTopic.has(r.topicId)) {
-      latestResultsByTopic.set(r.topicId, r);
-    }
-  }
-
   const displayName = userProfile?.displayName || user?.displayName || (language === "hi" ? "उपयोगकर्ता" : "User");
   const email = userProfile?.email || user?.email || "";
   const photoURL = user?.photoURL || null;
