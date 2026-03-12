@@ -11,6 +11,14 @@ interface AchievementEvent {
   timestamp: number;
 }
 
+export interface LocalQuizResult {
+  topicId: string;
+  topicName: string;
+  score: number;
+  totalQuestions: number;
+  attemptedAt: number;
+}
+
 interface AppState {
   selectedExamId: string | null;
   syllabus: Subject[];
