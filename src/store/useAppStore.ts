@@ -52,6 +52,7 @@ export const useAppStore = create<AppState>()(
       language: "en",
       achievedMilestones: {},
       lastAchievement: null,
+      quizResults: [],
 
       selectExam: (examId) => {
         const state = get();
