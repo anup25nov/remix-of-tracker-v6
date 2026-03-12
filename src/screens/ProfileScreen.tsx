@@ -206,7 +206,7 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
       </motion.div>
 
       {/* Booster Quiz Section */}
-      {featureEnabled && availableQuizTopics.length > 0 && (
+      {featureEnabled && completedTopicIds.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <div className="flex items-center gap-1.5 mb-3">
             <Sparkles size={14} className="text-primary" />
@@ -215,21 +215,16 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
             </h2>
           </div>
           <div className="rounded-2xl bg-card border border-border overflow-hidden divide-y divide-border">
-            {availableQuizTopics.map((topicId) => {
-              const topicInfo = getTopicInfo(topicId);
+            {completedTopicIds.map(({ topicId, name, nameHi }) => {
               const result = latestResultsByTopic.get(topicId);
-              const topicDisplayName = topicInfo
-                ? (language === "hi" ? topicInfo.nameHi : topicInfo.name)
-                : topicId;
+              const topicDisplayName = language === "hi" ? nameHi : name;
 
               return (
                 <button
                   key={topicId}
                   className="w-full flex items-center gap-3 p-3.5 sm:p-4 active:bg-secondary/50 transition-colors text-left"
                   onClick={() => {
-                    if (onStartQuiz && topicInfo) {
-                      onStartQuiz(topicId, topicInfo.name, topicInfo.nameHi);
-                    }
+                    onStartQuiz?.(topicId, name, nameHi);
                   }}
                 >
                   <div className="flex-1 min-w-0">
