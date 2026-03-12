@@ -16,7 +16,6 @@ interface ProfileScreenProps {
 const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
   const { language } = useTranslation();
   const { user } = useAuth();
-  const syllabus = useAppStore((s) => s.syllabus);
   const [userProfile, setUserProfile] = useState<{ displayName: string | null; email: string | null } | null>(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [savedPhone, setSavedPhone] = useState("");
@@ -24,8 +23,6 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") !== "light");
-  const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
-  const featureEnabled = isProfileBoosterQuizEnabled();
 
   useEffect(() => {
     if (!user) return;
@@ -44,11 +41,7 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
       }
     };
     loadPhone();
-
-    if (featureEnabled && user) {
-      getAllQuizResults(user.uid).then(setQuizResults);
-    }
-  }, [user?.uid, featureEnabled]);
+  }, [user?.uid]);
 
   const toggleTheme = () => {
     const next = !isDark;
