@@ -1,14 +1,12 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Sun, Moon, Phone, Save, Loader2, User as UserIcon, Mail, LogOut, Sparkles, RotateCcw, ChevronRight } from "lucide-react";
+import { ArrowLeft, Sun, Moon, Phone, Save, Loader2, User as UserIcon, Mail, LogOut } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
 import { getCurrentUserProfile, firebaseSignOut } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { isProfileBoosterQuizEnabled } from "@/lib/featureFlags";
-import { getAllQuizResults, type QuizResult } from "@/lib/boosterQuiz";
-import { useAppStore } from "@/store/useAppStore";
+import ProfileQuizSection from "@/components/ProfileQuizSection";
 
 interface ProfileScreenProps {
   onBack: () => void;
