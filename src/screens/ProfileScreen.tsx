@@ -167,56 +167,12 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
       </motion.div>
 
       {/* Booster Quiz Section */}
-      {featureEnabled && completedTopicIds.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-          <div className="flex items-center gap-1.5 mb-3">
-            <Sparkles size={14} className="text-primary" />
-            <h2 className="text-xs sm:text-sm font-bold text-foreground">
-              {language === "hi" ? "बूस्टर क्विज़" : "Booster Quizzes"}
-            </h2>
-          </div>
-          <div className="rounded-2xl bg-card border border-border overflow-hidden divide-y divide-border">
-            {completedTopicIds.map(({ topicId, name, nameHi }) => {
-              const result = latestResultsByTopic.get(topicId);
-              const topicDisplayName = language === "hi" ? nameHi : name;
-
-              return (
-                <button
-                  key={topicId}
-                  className="w-full flex items-center gap-3 p-3.5 sm:p-4 active:bg-secondary/50 transition-colors text-left"
-                  onClick={() => {
-                    onStartQuiz?.(topicId, name, nameHi);
-                  }}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm font-medium text-foreground truncate">{topicDisplayName}</p>
-                    {result ? (
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        {language === "hi" ? "स्कोर" : "Score"}: {result.score}/{result.totalQuestions} ({Math.round((result.score / result.totalQuestions) * 100)}%)
-                      </p>
-                    ) : (
-                      <p className="text-[10px] text-primary mt-0.5">
-                        {language === "hi" ? "अभी तक नहीं किया" : "Not attempted"}
-                      </p>
-                    )}
-                  </div>
-                  {result ? (
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <RotateCcw size={12} className="text-muted-foreground" />
-                      <span className="text-[10px] text-muted-foreground">{language === "hi" ? "दोबारा" : "Re-test"}</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1 shrink-0">
-                      <span className="text-[10px] font-medium text-primary">{language === "hi" ? "शुरू करें" : "Start"}</span>
-                      <ChevronRight size={12} className="text-primary" />
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
+      <ProfileQuizSection
+        language={language}
+        onStartQuiz={(topicId, topicName, topicNameHi) => {
+          onStartQuiz?.(topicId, topicName, topicNameHi);
+        }}
+      />
 
       {/* Logout */}
       {user && (
