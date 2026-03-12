@@ -7,7 +7,7 @@ import { getCurrentUserProfile, firebaseSignOut } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { isProfileBoosterQuizEnabled } from "@/lib/featureFlags";
-import { getAllQuizResults, getAvailableQuizTopics, type QuizResult } from "@/lib/boosterQuiz";
+import { getAllQuizResults, type QuizResult } from "@/lib/boosterQuiz";
 import { useAppStore } from "@/store/useAppStore";
 
 interface ProfileScreenProps {
