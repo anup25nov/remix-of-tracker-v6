@@ -34,25 +34,11 @@ const TopicsScreen = ({ subjectId, onBack, onStartQuiz }: TopicsScreenProps) => 
   const subject = syllabus.find((s) => s.id === subjectId);
   const [expandedTopicId, setExpandedTopicId] = useState<string | null>(null);
   const [quizPopup, setQuizPopup] = useState<{ topicId: string; topicName: string; topicNameHi: string } | null>(null);
-  const [availableQuizTopics, setAvailableQuizTopics] = useState<string[]>([]);
-  const [completedTopicsBefore, setCompletedTopicsBefore] = useState<Set<string>>(new Set());
   const featureEnabled = isProfileBoosterQuizEnabled();
 
   useEffect(() => {
     logScreenView(`topics_${subjectId}`);
   }, [subjectId]);
-
-  // Track which topics are already complete on mount
-  useEffect(() => {
-    if (subject && featureEnabled) {
-      const completed = new Set<string>();
-      for (const topic of subject.topics) {
-        if (isTopicDone(topic)) completed.add(topic.id);
-      }
-      setCompletedTopicsBefore(completed);
-      getAvailableQuizTopics().then(setAvailableQuizTopics);
-    }
-  }, [subjectId, featureEnabled]);
 
   if (!subject) return null;
 
