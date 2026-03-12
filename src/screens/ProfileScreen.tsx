@@ -47,9 +47,8 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
     };
     loadPhone();
 
-    if (featureEnabled) {
+    if (featureEnabled && user) {
       getAllQuizResults(user.uid).then(setQuizResults);
-      getAvailableQuizTopics().then(setAvailableQuizTopics);
     }
   }, [user?.uid, featureEnabled]);
 
