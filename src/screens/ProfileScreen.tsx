@@ -90,6 +90,19 @@ const ProfileScreen = ({ onBack, onStartQuiz }: ProfileScreenProps) => {
     return null;
   };
 
+  // Get all completed topics from syllabus (all subtopics done)
+  const completedTopicIds: { topicId: string; name: string; nameHi: string }[] = [];
+  for (const subject of syllabus) {
+    for (const topic of subject.topics) {
+      const done = topic.subtopics?.length
+        ? topic.subtopics.every((st) => st.completed)
+        : topic.completed;
+      if (done) {
+        completedTopicIds.push({ topicId: topic.id, name: topic.name, nameHi: topic.nameHi });
+      }
+    }
+  }
+
   // Get latest result per topic
   const latestResultsByTopic = new Map<string, QuizResult>();
   for (const r of quizResults) {
