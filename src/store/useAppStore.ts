@@ -25,12 +25,15 @@ interface AppState {
   language: Language;
   achievedMilestones: Record<string, number[]>;
   lastAchievement: AchievementEvent | null;
+  quizResults: LocalQuizResult[];
 
   selectExam: (examId: string) => void;
   toggleTopic: (subjectId: string, topicId: string, subtopicId?: string) => void;
   setLanguage: (lang: Language) => void;
   resetProgress: () => void;
   clearAchievement: () => void;
+  saveQuizResult: (result: LocalQuizResult) => void;
+  getQuizResult: (topicId: string) => LocalQuizResult | undefined;
   getSubjectProgress: (subjectId: string) => number;
   getSubjectUnits: (subjectId: string) => { completed: number; total: number };
   getOverallProgress: () => { completed: number; total: number; percent: number };
