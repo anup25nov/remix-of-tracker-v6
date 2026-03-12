@@ -167,6 +167,17 @@ export const useAppStore = create<AppState>()(
 
       clearAchievement: () => set({ lastAchievement: null }),
 
+      saveQuizResult: (result) => {
+        const state = get();
+        // Replace existing result for same topic or add new
+        const filtered = state.quizResults.filter((r) => r.topicId !== result.topicId);
+        set({ quizResults: [...filtered, result] });
+      },
+
+      getQuizResult: (topicId) => {
+        return get().quizResults.find((r) => r.topicId === topicId);
+      },
+
       getSubjectProgress: (subjectId) => {
         const subject = get().syllabus.find((s) => s.id === subjectId);
         if (!subject) return 0;
