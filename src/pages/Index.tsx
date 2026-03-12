@@ -141,7 +141,15 @@ const Index = () => {
           topicName={activeQuiz.topicName}
           topicNameHi={activeQuiz.topicNameHi}
           onBack={() => setActiveQuiz(null)}
-          onComplete={() => {}}
+          onComplete={(score, total) => {
+            useAppStore.getState().saveQuizResult({
+              topicId: activeQuiz.topicId,
+              topicName: activeQuiz.topicName,
+              score,
+              totalQuestions: total,
+              attemptedAt: Date.now(),
+            });
+          }}
         />
       </Suspense>
     );
