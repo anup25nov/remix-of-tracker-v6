@@ -6,7 +6,6 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { getSubjectColor } from "@/lib/subjectColors";
 import { logScreenView, logTopicToggled } from "@/lib/firebase";
 import { isProfileBoosterQuizEnabled } from "@/lib/featureFlags";
-import { getAvailableQuizTopics } from "@/lib/boosterQuiz";
 import BoosterQuizPopup from "@/components/BoosterQuizPopup";
 import { toast } from "sonner";
 import type { Topic } from "@/data/syllabus";
