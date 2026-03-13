@@ -55,12 +55,18 @@ const Index = () => {
   const showChatRef = useRef(false);
   const showProfileRef = useRef(false);
   const activeQuizRef = useRef<QuizInfo | null>(null);
+  const showMyQuizzesRef = useRef(false);
+  const showQuizUploadRef = useRef(false);
+  const activePersonalizedQuizRef = useRef<any>(null);
 
   useEffect(() => { selectedSubjectRef.current = selectedSubject; }, [selectedSubject]);
   useEffect(() => { showExamSelectRef.current = showExamSelect; }, [showExamSelect]);
   useEffect(() => { showChatRef.current = showChat; }, [showChat]);
   useEffect(() => { showProfileRef.current = showProfile; }, [showProfile]);
   useEffect(() => { activeQuizRef.current = activeQuiz; }, [activeQuiz]);
+  useEffect(() => { showMyQuizzesRef.current = showMyQuizzes; }, [showMyQuizzes]);
+  useEffect(() => { showQuizUploadRef.current = showQuizUpload; }, [showQuizUpload]);
+  useEffect(() => { activePersonalizedQuizRef.current = activePersonalizedQuiz; }, [activePersonalizedQuiz]);
 
   // Load Firestore data when user logs in + seed quiz data once
   useEffect(() => {
