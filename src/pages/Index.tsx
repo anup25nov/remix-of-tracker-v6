@@ -43,6 +43,9 @@ const Index = () => {
   const [showChat, setShowChat] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [activeQuiz, setActiveQuiz] = useState<QuizInfo | null>(null);
+  const [showMyQuizzes, setShowMyQuizzes] = useState(false);
+  const [showQuizUpload, setShowQuizUpload] = useState(false);
+  const [activePersonalizedQuiz, setActivePersonalizedQuiz] = useState<any>(null);
   const [skippedLogin, setSkippedLogin] = useState(() => {
     return localStorage.getItem("skippedLogin") === "true";
   });
