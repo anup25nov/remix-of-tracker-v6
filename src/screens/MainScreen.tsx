@@ -17,6 +17,7 @@ interface MainScreenProps {
   onChangeExam: () => void;
   onOpenChat: () => void;
   onOpenProfile: () => void;
+  onOpenMyQuizzes: () => void;
 }
 
 const TelegramIcon = () => (
@@ -91,7 +92,7 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
-const MainScreen = ({ onSelectSubject, onChangeExam, onOpenChat, onOpenProfile }: MainScreenProps) => {
+const MainScreen = ({ onSelectSubject, onChangeExam, onOpenChat, onOpenProfile, onOpenMyQuizzes }: MainScreenProps) => {
   const { t, language } = useTranslation();
   const { user } = useAuth();
   const syllabus = useAppStore((s) => s.syllabus);
@@ -353,6 +354,32 @@ const MainScreen = ({ onSelectSubject, onChangeExam, onOpenChat, onOpenProfile }
           </motion.button>
         </div>
       </motion.div>
+
+      {/* My Quizzes CTA */}
+      <motion.button
+        onClick={onOpenMyQuizzes}
+        className="w-full rounded-2xl p-4 flex items-center gap-3.5 active:scale-[0.98] transition-transform overflow-hidden relative"
+        style={{
+          background: "linear-gradient(135deg, hsl(280 73% 60% / 0.12), hsl(330 85% 55% / 0.08))",
+          border: "1px solid hsl(280 73% 60% / 0.25)",
+        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.12 }}
+      >
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: "hsl(280 73% 60% / 0.15)" }}>
+          🧠
+        </div>
+        <div className="flex-1 text-left">
+          <h3 className="text-xs sm:text-sm font-bold text-foreground">
+            {language === "hi" ? "पर्सनलाइज़्ड क्विज़" : "Personalized Quizzes"}
+          </h3>
+          <p className="text-[10px] text-muted-foreground">
+            {language === "hi" ? "अपनी स्टडी मटीरियल से AI क्विज़ बनाएं" : "Generate AI quizzes from your study material"}
+          </p>
+        </div>
+        <ChevronRight size={16} className="text-muted-foreground shrink-0" />
+      </motion.button>
 
       {/* Subjects List */}
       <motion.div

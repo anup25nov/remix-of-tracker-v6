@@ -15,6 +15,9 @@ const ExamSelectScreen = lazy(() => import("@/screens/ExamSelectScreen"));
 const ChatScreen = lazy(() => import("@/screens/ChatScreen"));
 const ProfileScreen = lazy(() => import("@/screens/ProfileScreen"));
 const BoosterQuizScreen = lazy(() => import("@/screens/BoosterQuizScreen"));
+const PersonalizedQuizLibraryScreen = lazy(() => import("@/screens/PersonalizedQuizLibraryScreen"));
+const PersonalizedQuizUploadScreen = lazy(() => import("@/screens/PersonalizedQuizUploadScreen"));
+const PersonalizedQuizPlayScreen = lazy(() => import("@/screens/PersonalizedQuizPlayScreen"));
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
@@ -40,6 +43,9 @@ const Index = () => {
   const [showChat, setShowChat] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [activeQuiz, setActiveQuiz] = useState<QuizInfo | null>(null);
+  const [showMyQuizzes, setShowMyQuizzes] = useState(false);
+  const [showQuizUpload, setShowQuizUpload] = useState(false);
+  const [activePersonalizedQuiz, setActivePersonalizedQuiz] = useState<any>(null);
   const [skippedLogin, setSkippedLogin] = useState(() => {
     return localStorage.getItem("skippedLogin") === "true";
   });
@@ -49,12 +55,18 @@ const Index = () => {
   const showChatRef = useRef(false);
   const showProfileRef = useRef(false);
   const activeQuizRef = useRef<QuizInfo | null>(null);
+  const showMyQuizzesRef = useRef(false);
+  const showQuizUploadRef = useRef(false);
+  const activePersonalizedQuizRef = useRef<any>(null);
 
   useEffect(() => { selectedSubjectRef.current = selectedSubject; }, [selectedSubject]);
   useEffect(() => { showExamSelectRef.current = showExamSelect; }, [showExamSelect]);
   useEffect(() => { showChatRef.current = showChat; }, [showChat]);
   useEffect(() => { showProfileRef.current = showProfile; }, [showProfile]);
   useEffect(() => { activeQuizRef.current = activeQuiz; }, [activeQuiz]);
+  useEffect(() => { showMyQuizzesRef.current = showMyQuizzes; }, [showMyQuizzes]);
+  useEffect(() => { showQuizUploadRef.current = showQuizUpload; }, [showQuizUpload]);
+  useEffect(() => { activePersonalizedQuizRef.current = activePersonalizedQuiz; }, [activePersonalizedQuiz]);
 
   // Load Firestore data when user logs in + seed quiz data once
   useEffect(() => {
@@ -84,6 +96,9 @@ const Index = () => {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     const listener = CapacitorApp.addListener("backButton", () => {
+      if (activePersonalizedQuizRef.current) { setActivePersonalizedQuiz(null); return; }
+      if (showQuizUploadRef.current) { setShowQuizUpload(false); return; }
+      if (showMyQuizzesRef.current) { setShowMyQuizzes(false); return; }
       if (activeQuizRef.current) { setActiveQuiz(null); return; }
       if (showProfileRef.current) { setShowProfile(false); return; }
       if (showChatRef.current) { setShowChat(false); return; }
@@ -155,6 +170,52 @@ const Index = () => {
     );
   }
 
+  if (activePersonalizedQuiz) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PersonalizedQuizPlayScreen
+          quiz={activePersonalizedQuiz}
+          onBack={() => setActivePersonalizedQuiz(null)}
+          onComplete={() => {
+            // Score already saved in the play screen
+          }}
+        />
+      </Suspense>
+    );
+  }
+
+  if (showQuizUpload) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PersonalizedQuizUploadScreen
+          onBack={() => setShowQuizUpload(false)}
+          onQuizGenerated={() => {
+            setShowQuizUpload(false);
+            setShowMyQuizzes(true);
+          }}
+        />
+      </Suspense>
+    );
+  }
+
+  if (showMyQuizzes) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PersonalizedQuizLibraryScreen
+          onBack={() => setShowMyQuizzes(false)}
+          onCreateNew={() => {
+            setShowMyQuizzes(false);
+            setShowQuizUpload(true);
+          }}
+          onPlayQuiz={(quiz) => {
+            setShowMyQuizzes(false);
+            setActivePersonalizedQuiz(quiz);
+          }}
+        />
+      </Suspense>
+    );
+  }
+
   if (showProfile) {
     return (
       <Suspense fallback={<LoadingSpinner />}>
@@ -195,6 +256,7 @@ const Index = () => {
         onChangeExam={() => setShowExamSelect(true)}
         onOpenChat={() => setShowChat(true)}
         onOpenProfile={() => setShowProfile(true)}
+        onOpenMyQuizzes={() => setShowMyQuizzes(true)}
       />
     );
   };
