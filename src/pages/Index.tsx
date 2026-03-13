@@ -15,6 +15,9 @@ const ExamSelectScreen = lazy(() => import("@/screens/ExamSelectScreen"));
 const ChatScreen = lazy(() => import("@/screens/ChatScreen"));
 const ProfileScreen = lazy(() => import("@/screens/ProfileScreen"));
 const BoosterQuizScreen = lazy(() => import("@/screens/BoosterQuizScreen"));
+const PersonalizedQuizLibraryScreen = lazy(() => import("@/screens/PersonalizedQuizLibraryScreen"));
+const PersonalizedQuizUploadScreen = lazy(() => import("@/screens/PersonalizedQuizUploadScreen"));
+const PersonalizedQuizPlayScreen = lazy(() => import("@/screens/PersonalizedQuizPlayScreen"));
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
