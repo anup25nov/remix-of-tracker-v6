@@ -96,6 +96,9 @@ const Index = () => {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     const listener = CapacitorApp.addListener("backButton", () => {
+      if (activePersonalizedQuizRef.current) { setActivePersonalizedQuiz(null); return; }
+      if (showQuizUploadRef.current) { setShowQuizUpload(false); return; }
+      if (showMyQuizzesRef.current) { setShowMyQuizzes(false); return; }
       if (activeQuizRef.current) { setActiveQuiz(null); return; }
       if (showProfileRef.current) { setShowProfile(false); return; }
       if (showChatRef.current) { setShowChat(false); return; }
