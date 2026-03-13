@@ -170,6 +170,52 @@ const Index = () => {
     );
   }
 
+  if (activePersonalizedQuiz) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PersonalizedQuizPlayScreen
+          quiz={activePersonalizedQuiz}
+          onBack={() => setActivePersonalizedQuiz(null)}
+          onComplete={() => {
+            // Score already saved in the play screen
+          }}
+        />
+      </Suspense>
+    );
+  }
+
+  if (showQuizUpload) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PersonalizedQuizUploadScreen
+          onBack={() => setShowQuizUpload(false)}
+          onQuizGenerated={() => {
+            setShowQuizUpload(false);
+            setShowMyQuizzes(true);
+          }}
+        />
+      </Suspense>
+    );
+  }
+
+  if (showMyQuizzes) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <PersonalizedQuizLibraryScreen
+          onBack={() => setShowMyQuizzes(false)}
+          onCreateNew={() => {
+            setShowMyQuizzes(false);
+            setShowQuizUpload(true);
+          }}
+          onPlayQuiz={(quiz) => {
+            setShowMyQuizzes(false);
+            setActivePersonalizedQuiz(quiz);
+          }}
+        />
+      </Suspense>
+    );
+  }
+
   if (showProfile) {
     return (
       <Suspense fallback={<LoadingSpinner />}>
@@ -210,6 +256,7 @@ const Index = () => {
         onChangeExam={() => setShowExamSelect(true)}
         onOpenChat={() => setShowChat(true)}
         onOpenProfile={() => setShowProfile(true)}
+        onOpenMyQuizzes={() => setShowMyQuizzes(true)}
       />
     );
   };
