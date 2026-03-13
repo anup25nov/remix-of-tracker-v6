@@ -17,6 +17,7 @@ interface MainScreenProps {
   onChangeExam: () => void;
   onOpenChat: () => void;
   onOpenProfile: () => void;
+  onOpenMyQuizzes: () => void;
 }
 
 const TelegramIcon = () => (
